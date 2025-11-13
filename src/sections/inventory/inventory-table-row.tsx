@@ -10,18 +10,18 @@ interface InventoryTableRowProps {
 export function InventoryTableRow({ row, onEdit, onDelete }: InventoryTableRowProps) {
   return (
     <TableRow>
-      <TableCell>{row.item}</TableCell>
-      <TableCell>{row.qty}</TableCell>
-      <TableCell>{row.uom}</TableCell>
-      <TableCell>{row.price_per_qty}</TableCell>
-      <TableCell>
+      <TableCell>{row.book_name}</TableCell>
+      <TableCell>{row.amount}</TableCell>
+      <TableCell>{row.created_at}</TableCell>
+      <TableCell>{row.updated_at}</TableCell>
+      {/* <TableCell>
         <Button variant="outlined" color="primary" onClick={() => onEdit(row)}>
           Edit
         </Button>
         <Button variant="outlined" color="error" onClick={() => onDelete(row.id)} sx={{ ml: 1 }}>
           Delete
         </Button>
-      </TableCell>
+      </TableCell> */}
     </TableRow>
   );
 }

@@ -9,7 +9,6 @@ import {
   Autocomplete,
   CircularProgress,
 } from '@mui/material';
-import { addIngredientItem, updateIngredientItem } from 'src/services/recipeService';
 import { fetchInventory } from 'src/services/inventoryService';
 import { Ingredient } from 'src/models/recipe';
 
@@ -90,11 +89,11 @@ export function IngredientFormModal({
         quantity: parseFloat(quantity),
       };
 
-      if (ingredient && ingredient.id) {
-        await updateIngredientItem(ingredient.id, data);
-      } else {
-        await addIngredientItem(data);
-      }
+      // if (ingredient && ingredient.id) {
+      //   await updateIngredientItem(ingredient.id, data);
+      // } else {
+      //   await addIngredientItem(data);
+      // }
 
       onSaveSuccess();
       onClose();

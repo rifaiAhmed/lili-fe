@@ -11,18 +11,18 @@ interface RecipeTableRowProps {
 export function RecipeTableRow({ row, onEdit, onDelete, onView }: RecipeTableRowProps) {
   return (
     <TableRow>
-      <TableCell>{row.name}</TableCell>
-      <TableCell>{row.sku}</TableCell>
-      <TableCell>{row.cogs}</TableCell>
+      <TableCell>{row.book_name}</TableCell>
+      <TableCell>{row.user_name}</TableCell>
+      <TableCell>{row.date_pinjam}</TableCell>
+      <TableCell>{row.date_kembali}</TableCell>
       <TableCell>
-        <Button variant="contained" color="info" onClick={() => onView(row)} sx={{ mr: 1 }}>
-          View Detail
-        </Button>
-        <Button variant="outlined" color="primary" onClick={() => onEdit(row)} sx={{ mr: 1 }}>
-          Edit
-        </Button>
-        <Button variant="outlined" color="error" onClick={() => onDelete(row.id)}>
-          Delete
+        <Button
+          variant="outlined"
+          color="error"
+          disabled={row.is_kembali === true}
+          onClick={() => onDelete(row.ID)}
+        >
+          Kembalikan
         </Button>
       </TableCell>
     </TableRow>

@@ -4,23 +4,25 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 interface LoginResponse {
   token: string;
-  user: {
-    id: number;
-    email: string;
-    name: string;
-  };
 }
 
 interface LoginRequest {
-  email: string;
+  username: string;
   password: string;
 }
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     try {
-      const response = await axios.post<LoginResponse>(`${API_URL}auth/submit-email`, credentials);
-      return response.data;
+      const response = await axios.post(`${API_URL}user/v1/login`, credentials);
+
+      const token = response.data?.data?.token;
+
+      if (!token) {
+        throw new Error('Token tidak ditemukan di response API');
+      }
+
+      return { token };
     } catch (error: any) {
       throw error.response?.data || { message: 'Login failed' };
     }

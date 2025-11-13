@@ -60,7 +60,7 @@ export function Router() {
           index: true,
         },
         {
-          path: 'inventory',
+          path: 'books',
           element: (
             <ProtectedRoute>
               <InventoryPage />
@@ -75,7 +75,7 @@ export function Router() {
             </ProtectedRoute>
           ),
         },
-        // { path: 'user', element: <ProtectedRoute><UserPage /></ProtectedRoute> },
+        { path: 'user', element: <ProtectedRoute><UserPage /></ProtectedRoute> },
         // { path: 'products', element: <ProtectedRoute><ProductsPage /></ProtectedRoute> },
         // { path: 'blog', element: <ProtectedRoute><BlogPage /></ProtectedRoute> },
       ],

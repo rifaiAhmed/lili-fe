@@ -9,6 +9,6 @@ const icon = (name: string) => (
 
 export const navData = [
   { title: 'Dashboard', path: '/', icon: icon('ic-analytics') },
-  { title: 'Inventory', path: '/inventory', icon: icon('ic-blog') },
-  { title: 'Recipe', path: '/recipe', icon: icon('ic-blog') },
+  { title: 'Books', path: '/books', icon: icon('ic-blog') },
+  { title: 'History', path: '/recipe', icon: icon('ic-blog') },
 ];

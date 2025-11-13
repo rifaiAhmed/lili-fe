@@ -53,7 +53,7 @@ export function RecipeView() {
   // Fetch Recipes
   const loadRecipes = useCallback(async () => {
     try {
-      const response = await fetchRecipe(page + 1, rowsPerPage, searchQuery, sortOrder, 'name');
+      const response = await fetchRecipe(page + 1, rowsPerPage, searchQuery, sortOrder, 'id');
       setRecipes(response.data || []); // Pastikan tidak null
       setMeta(response.meta || { totalData: 0, totalPages: 0, current_page: 1 });
     } catch (error) {
@@ -101,12 +101,12 @@ export function RecipeView() {
     if (deleteId !== null) {
       try {
         await deleteRecipeItem(deleteId);
-        setRecipes((prevRecipes) => prevRecipes.filter((item) => item.id !== deleteId));
-        handleSnackbar('Resep berhasil dihapus!', 'success');
+        setRecipes((prevRecipes) => prevRecipes.filter((item) => item.ID !== deleteId));
+        handleSnackbar('Buku berhasil dikembalikan!', 'success');
         loadRecipes();
       } catch (error) {
-        console.error('Failed to delete recipe:', error);
-        handleSnackbar('Gagal menghapus resep.', 'error');
+        console.error('Failed to delete buku:', error);
+        handleSnackbar('Gagal menghapus Buku.', 'error');
       } finally {
         setDeleteConfirmOpen(false);
         setDeleteId(null);
@@ -120,7 +120,7 @@ export function RecipeView() {
 
   const handleView = async (item: RecipeItem) => {
     try {
-      const response = await fetchRecipeDetail(item.id);
+      const response = await fetchRecipeDetail(item.ID);
       setSelectedDetailItem(response);
       setDetailModalOpen(true);
     } catch (error) {
@@ -139,7 +139,7 @@ export function RecipeView() {
 
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-          Resep
+          History
         </Typography>
         <Button
           variant="contained"
@@ -147,7 +147,7 @@ export function RecipeView() {
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={handleAdd}
         >
-          Tambah Resep
+          Tambah Data peminjaman
         </Button>
       </Box>
 
@@ -172,22 +172,23 @@ export function RecipeView() {
                 <TableRow>
                   <TableCell>
                     <TableSortLabel active direction={sortOrder} onClick={handleSort}>
-                      NAME RECIPE
+                      Book Name
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell>SKU</TableCell>
-                  <TableCell>COGS</TableCell>
-                  <TableCell>ACTIONS</TableCell>
+                  <TableCell>User Peminjam</TableCell>
+                  <TableCell>Date Pinjam</TableCell>
+                  <TableCell>Date Kembali</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {recipes.length > 0 ? (
                   recipes.map((row) => (
                     <RecipeTableRow
-                      key={row.id}
+                      key={row.ID}
                       row={row}
                       onEdit={handleEdit}
-                      onDelete={() => handleDeleteConfirm(row.id)}
+                      onDelete={() => handleDeleteConfirm(row.ID)}
                       onView={handleView}
                     />
                   ))
@@ -198,6 +199,15 @@ export function RecipeView() {
             </Table>
           </TableContainer>
         </Scrollbar>
+        <TablePagination
+          component="div"
+          page={page}
+          count={meta.totalData}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(event, newPage) => setPage(newPage)}
+          rowsPerPageOptions={[5, 10, 25]}
+          onRowsPerPageChange={(event) => setRowsPerPage(parseInt(event.target.value, 10))}
+        />
       </Card>
 
       <RecipeModal
@@ -214,8 +224,8 @@ export function RecipeView() {
       />
 
       <Dialog open={deleteConfirmOpen} onClose={handleDeleteCancel}>
-        <DialogTitle>Hapus Resep</DialogTitle>
-        <DialogContent>Apakah Anda yakin ingin menghapus resep ini?</DialogContent>
+        <DialogTitle>Kembalikan Buku?</DialogTitle>
+        <DialogContent>Apakah Anda yakin ingin Mengembalikan buku ini?</DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel}>Batal</Button>
           <Button onClick={handleDelete} color="error">

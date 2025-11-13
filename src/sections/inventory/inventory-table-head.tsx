@@ -4,10 +4,10 @@ export function InventoryTableHead() {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Item</TableCell>
-        <TableCell>Quantity</TableCell>
-        <TableCell>Unit</TableCell>
-        <TableCell>Price per Qty</TableCell>
+        <TableCell>Book Name</TableCell>
+        <TableCell>Amount</TableCell>
+        <TableCell>Created At</TableCell>
+        <TableCell>Updated At</TableCell>
       </TableRow>
     </TableHead>
   );

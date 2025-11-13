@@ -1,4 +1,4 @@
-import { RecipeItem, RecipeDetailResponse, IngredientData } from 'src/models/recipe';
+import { RecipeItem, RecipeDetailResponse } from 'src/models/recipe';
 
 interface ApiResponse {
   meta: { current_page: number; totalPages: number; totalData: number };
@@ -39,9 +39,9 @@ export const fetchRecipe = async (
       queryParams.append('search', search);
     }
 
-    const response = await fetch(`${apiUrl}recipe?${queryParams}`, {
+    const response = await fetch(`${apiUrl}book/v1/list-history?${queryParams}`, {
       method: 'GET',
-      headers: { Authorization: token ? `${token}` : '', 'Content-Type': 'application/json' },
+      headers: { Authorization: token ? `Bearer ${token}` : '', 'Content-Type': 'application/json' },
       mode: 'cors',
       credentials: 'include',
     });
@@ -70,9 +70,9 @@ export async function deleteRecipeItem(id: number) {
   try {
     const token = localStorage.getItem('token') || '';
 
-    const response = await fetch(`${apiUrl}recipe/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: token ? `${token}` : '', 'Content-Type': 'application/json' },
+    const response = await fetch(`${apiUrl}book/v1/pengembalian/${id}`, {
+      method: 'PATCH',
+      headers: { Authorization: token ? `Bearer ${token}` : '', 'Content-Type': 'application/json' },
     });
 
     if (response.status === 401) {
@@ -88,19 +88,22 @@ export async function deleteRecipeItem(id: number) {
 }
 
 /**
- * Create a new recipe item.
+ * Create a new recipe (peminjaman buku).
  */
-export async function createRecipeItem(itemData: { name: string }): Promise<RecipeItem> {
+export async function createRecipeItem(itemData: { book_id: number; user_id: number }): Promise<RecipeItem> {
   try {
     const token = localStorage.getItem('token') || '';
 
-    const response = await fetch(`${apiUrl}recipe`, {
+    const response = await fetch(`${apiUrl}book/v1/peminjaman`, {
       method: 'POST',
       headers: {
-        Authorization: token ? `${token}` : '',
+        Authorization: token ? `Bearer ${token}` : '',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: itemData.name }), // Hanya mengirim name
+      body: JSON.stringify({
+        book_id: itemData.book_id,
+        user_id: itemData.user_id,
+      }),
     });
 
     if (response.status === 401) {
@@ -121,11 +124,11 @@ export async function createRecipeItem(itemData: { name: string }): Promise<Reci
 }
 
 /**
- * Update an existing recipe item.
+ * Update an existing recipe (peminjaman buku).
  */
 export async function updateRecipeItem(
   id: number,
-  updatedData: { name: string }
+  updatedData: { book_id: number; user_id: number }
 ): Promise<RecipeItem> {
   try {
     const token = localStorage.getItem('token') || '';
@@ -136,7 +139,10 @@ export async function updateRecipeItem(
         Authorization: token ? `${token}` : '',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: updatedData.name }),
+      body: JSON.stringify({
+        book_id: updatedData.book_id,
+        user_id: updatedData.user_id,
+      }),
     });
 
     if (response.status === 401) {
@@ -209,20 +215,17 @@ export async function deleteIngredentItem(id: number) {
   }
 }
 
+
+
 /**
- * Create a new ingredient item.
+ * Fetch list of users (untuk dropdown user)
  */
-export async function addIngredientItem(itemData: IngredientData): Promise<RecipeItem> {
+export async function fetchUserList(): Promise<any> {
   try {
     const token = localStorage.getItem('token') || '';
-
-    const response = await fetch(`${apiUrl}ingredient`, {
-      method: 'POST',
-      headers: {
-        Authorization: token ? `${token}` : '',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(itemData),
+    const response = await fetch(`${apiUrl}user/v1/list?sort_by=id&sort_type=desc&limit=100`, {
+      method: 'GET',
+      headers: { Authorization: token ? `Bearer ${token}` : '', 'Content-Type': 'application/json' },
     });
 
     if (response.status === 401) {
@@ -230,35 +233,24 @@ export async function addIngredientItem(itemData: IngredientData): Promise<Recip
       throw new Error('Unauthorized');
     }
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to create ingredient item');
-    }
+    if (!response.ok) throw new Error('Failed to fetch user list');
 
     return await response.json();
   } catch (error) {
-    console.error('Error creating ingredient:', error);
+    console.error('Error fetching user list:', error);
     throw error;
   }
 }
 
 /**
- * Update an existing ingredient item.
+ * Fetch list of books (untuk dropdown buku)
  */
-export async function updateIngredientItem(
-  id: number,
-  updatedData: IngredientData
-): Promise<RecipeItem> {
+export async function fetchBookList(): Promise<any> {
   try {
     const token = localStorage.getItem('token') || '';
-
-    const response = await fetch(`${apiUrl}ingredient/${id}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: token ? `${token}` : '',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedData),
+    const response = await fetch(`${apiUrl}book/v1/list?sort_by=id&sort_type=desc&limit=100`, {
+      method: 'GET',
+      headers: { Authorization: token ? `Bearer ${token}` : '', 'Content-Type': 'application/json' },
     });
 
     if (response.status === 401) {
@@ -266,14 +258,11 @@ export async function updateIngredientItem(
       throw new Error('Unauthorized');
     }
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to update ingredient item');
-    }
+    if (!response.ok) throw new Error('Failed to fetch book list');
 
     return await response.json();
   } catch (error) {
-    console.error('Error updating ingredient:', error);
+    console.error('Error fetching book list:', error);
     throw error;
   }
 }

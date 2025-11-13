@@ -16,8 +16,8 @@ import { authService } from 'src/services/authService';
 export function SignInView() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState<string>('hello@gmail.com');
-  const [password, setPassword] = useState<string>('@demo1234');
+  const [username, setUsername] = useState<string>('Admin');
+  const [password, setPassword] = useState<string>('qwe123');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -28,9 +28,9 @@ export function SignInView() {
     setSuccessMessage(null);
 
     try {
-      const data = await authService.login({ email, password });
+      const data = await authService.login({ username, password });
       localStorage.setItem('token', data.token);
-      localStorage.setItem('email', email);
+      localStorage.setItem('email', username);
 
       setSuccessMessage('Login successful! Redirecting...');
     } catch (err: any) {
@@ -38,7 +38,7 @@ export function SignInView() {
     } finally {
       setLoading(false);
     }
-  }, [email, password]);
+  }, [username, password]);
 
   return (
     <>
@@ -49,10 +49,10 @@ export function SignInView() {
       <Box display="flex" flexDirection="column" alignItems="flex-end">
         <TextField
           fullWidth
-          name="email"
-          label="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="username"
+          label="User Name"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           InputLabelProps={{ shrink: true }}
           sx={{ mb: 3 }}
         />

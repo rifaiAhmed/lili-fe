@@ -40,7 +40,7 @@ export function RecipeDetailModal({
 
   useEffect(() => {
     if (open && item) {
-      fetchRecipeDetail(item.recipe.id)
+      fetchRecipeDetail(item.recipe.ID)
         .then((data) => setRecipeDetail(data))
         .catch((error) => console.error('Failed to fetch updated recipe:', error));
     }
@@ -69,7 +69,7 @@ export function RecipeDetailModal({
       setLoading(true);
       try {
         await deleteIngredentItem(selectedId);
-        const updatedData = await fetchRecipeDetail(recipeDetail?.recipe.id ?? 0);
+        const updatedData = await fetchRecipeDetail(recipeDetail?.recipe.ID ?? 0);
         setRecipeDetail(updatedData);
         handleSnackbar('Bahan berhasil dihapus!', 'success');
         onDeleteSuccess();
@@ -97,19 +97,19 @@ export function RecipeDetailModal({
                     <TableCell>
                       <strong>Name</strong>
                     </TableCell>
-                    <TableCell>{recipeDetail.recipe.name}</TableCell>
+                    <TableCell>{recipeDetail.recipe.book_name}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>
                       <strong>SKU</strong>
                     </TableCell>
-                    <TableCell>{recipeDetail.recipe.sku}</TableCell>
+                    <TableCell>{recipeDetail.recipe.date_kembali}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>
                       <strong>COGS</strong>
                     </TableCell>
-                    <TableCell>{recipeDetail.recipe.cogs}</TableCell>
+                    <TableCell>{recipeDetail.recipe.is_kembali}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -143,7 +143,7 @@ export function RecipeDetailModal({
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                {/* <TableBody>
                   {recipeDetail?.ingredients?.length > 0 ? (
                     recipeDetail.ingredients.map((ingredient) => (
                       <TableRow key={ingredient.id}>
@@ -175,7 +175,7 @@ export function RecipeDetailModal({
                       </TableCell>
                     </TableRow>
                   )}
-                </TableBody>
+                </TableBody> */}
               </Table>
             </>
           ) : (
@@ -191,11 +191,11 @@ export function RecipeDetailModal({
       <IngredientFormModal
         open={formOpen}
         onClose={() => setFormOpen(false)}
-        recipeId={recipeDetail?.recipe.id ?? 0}
+        recipeId={recipeDetail?.recipe.ID ?? 0}
         ingredient={selectedIngredient}
         onSaveSuccess={async () => {
           setFormOpen(false);
-          const updatedData = await fetchRecipeDetail(recipeDetail?.recipe.id ?? 0);
+          const updatedData = await fetchRecipeDetail(recipeDetail?.recipe.ID ?? 0);
           setRecipeDetail(updatedData);
         }}
       />

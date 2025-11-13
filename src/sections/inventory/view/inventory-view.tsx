@@ -26,7 +26,6 @@ import { fetchInventory, deleteInventoryItem } from 'src/services/inventoryServi
 import { InventoryItem } from 'src/models/inventory';
 import { TableNoData } from 'src/sections/user/table-no-data';
 import { InventoryTableRow } from '../inventory-table-row';
-import { InventoryModal } from '../inventory-modal';
 
 export function InventoryView() {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
@@ -35,7 +34,7 @@ export function InventoryView() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState('');
   const [tempSearch, setTempSearch] = useState('');
-  const [sortField, setSortField] = useState<'item' | 'qty' | 'uom' | 'price_per_qty'>('item');
+  const [sortField, setSortField] = useState<'id' | 'book_name' | 'amount' | 'created_at' | 'updated_at'>('id');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
@@ -74,7 +73,7 @@ export function InventoryView() {
     }
   };
 
-  const handleSort = (field: 'item' | 'qty' | 'uom' | 'price_per_qty') => {
+  const handleSort = (field: 'id' | 'book_name' | 'amount' | 'created_at' | 'updated_at') => {
     const isAsc = sortField === field && sortOrder === 'asc';
     setSortOrder(isAsc ? 'desc' : 'asc');
     setSortField(field);
@@ -127,16 +126,16 @@ export function InventoryView() {
       />
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-          Inventory
+          Books
         </Typography>
-        <Button
+        {/* <Button
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={handleAdd}
         >
           Add Item
-        </Button>
+        </Button> */}
       </Box>
 
       <Card>
@@ -145,7 +144,7 @@ export function InventoryView() {
           value={tempSearch}
           onChange={(event) => setTempSearch(event.target.value)}
           onKeyDown={handleSearchKeyDown}
-          placeholder="Search inventory..."
+          placeholder="Search book..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
@@ -158,7 +157,7 @@ export function InventoryView() {
             <Table sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow>
-                  {['item', 'qty', 'uom', 'price_per_qty'].map((field) => (
+                  {['book_name', 'amount', 'created_at', 'updated_at'].map((field) => (
                     <TableCell key={field}>
                       <TableSortLabel
                         active={sortField === field}
@@ -169,7 +168,7 @@ export function InventoryView() {
                       </TableSortLabel>
                     </TableCell>
                   ))}
-                  <TableCell>Actions</TableCell>
+                  {/* <TableCell>Actions</TableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -197,16 +196,6 @@ export function InventoryView() {
           onRowsPerPageChange={(event) => setRowsPerPage(parseInt(event.target.value, 10))}
         />
       </Card>
-
-      <InventoryModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        item={selectedItem}
-        onSuccess={(message) => {
-          loadInventory();
-          handleSnackbar(message, 'success');
-        }}
-      />
 
       <Dialog open={deleteConfirmOpen} onClose={handleDeleteCancel}>
         <DialogTitle>Confirm Delete</DialogTitle>

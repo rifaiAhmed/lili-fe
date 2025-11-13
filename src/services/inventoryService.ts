@@ -39,9 +39,9 @@ export const fetchInventory = async (
       queryParams.append('search', search);
     }
 
-    const response = await fetch(`${apiUrl}inventory?${queryParams}`, {
+    const response = await fetch(`${apiUrl}book/v1/list?${queryParams}`, {
       method: 'GET',
-      headers: { Authorization: token ? `${token}` : '', 'Content-Type': 'application/json' },
+      headers: { Authorization: token ? `Bearer ${token}` : '', 'Content-Type': 'application/json' },
       mode: 'cors',
       credentials: 'include',
     });
